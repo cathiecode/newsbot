@@ -169,6 +169,8 @@ async function main() {
 
   const latestArticles = articles.filter(article => article.date > lastRunDate);
 
+  latestArticles.sort((a, b) => a.date.getTime() - b.date.getTime());
+
   for (const article of latestArticles) {
     await withRetry(2, () => postToMisskey(article, misskeyServer, misskeyToken, timeZone));
   }
