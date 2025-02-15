@@ -60,8 +60,6 @@ async function postToMisskey(
 }
 
 async function main() {
-  const args = parseArgs(Deno.args);
-
   const misskeyToken = Deno.env.get("MISSKEY_TOKEN");
   const misskeyServer = Deno.env.get("MISSKEY_SERVER");
   const dryRun = Deno.env.has("NEWSBOT_DRY_RUN");
