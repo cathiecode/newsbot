@@ -12,7 +12,7 @@ export function extractNikkeiNewsArticles(document: Document): Article[] {
       url: `${baseUrl}${article.querySelector("a")?.href}`,
       date: map(
         article.querySelector("time")?.dateTime,
-        (dateTime) => new Date(dateTime)
+        (dateTime) => new Date(dateTime),
       ),
     }))
     .filter((article) => isArticle(article));

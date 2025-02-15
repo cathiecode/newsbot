@@ -4,7 +4,7 @@ export function sleep(ms: number) {
 
 export async function withRetry<T>(
   count: number,
-  lambda: () => Promise<T>
+  lambda: () => Promise<T>,
 ): Promise<T> {
   let i = 0;
 
@@ -20,7 +20,10 @@ export async function withRetry<T>(
   throw new Error(`Failed to execute lambda after ${i} retries.`);
 }
 
-export function map<T, U>(mayValue: T | undefined, process: (value: T) => U): U | undefined {
+export function map<T, U>(
+  mayValue: T | undefined,
+  process: (value: T) => U,
+): U | undefined {
   if (mayValue === undefined) {
     return undefined;
   }
@@ -31,4 +34,8 @@ export function map<T, U>(mayValue: T | undefined, process: (value: T) => U): U 
 export function tee<T>(value: T): T {
   console.log(value);
   return value;
+}
+
+export function dateToSeconds(date: Date) {
+  return date.getTime() / 1000;
 }

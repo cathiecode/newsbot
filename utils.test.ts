@@ -1,6 +1,6 @@
 import { assertEquals } from "jsr:@std/assert";
 
-import { withRetry, sleep, map } from "./utils.ts";
+import { map, sleep, withRetry } from "./utils.ts";
 
 function throwsTwice() {
   let i = 0;
@@ -61,14 +61,14 @@ Deno.test("sleep waits for the specified time", async () => {
 Deno.test("map returns undefined for undefined", () => {
   assertEquals(
     map(undefined, (_) => "failed"),
-    undefined
+    undefined,
   );
 });
 
 Deno.test("map returns the result of the process function", () => {
   assertEquals(
     map(1, (x) => x + 1),
-    2
+    2,
   );
 });
 
@@ -77,7 +77,7 @@ Deno.test(
   () => {
     assertEquals(
       map(0, (x) => x + 1),
-      1
+      1,
     );
-  }
+  },
 );
