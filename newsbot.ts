@@ -1,85 +1,9 @@
-// @ts-types="npm:@types/jsdom"
-import { JSDOM } from "npm:jsdom";
-import { z as zod } from "npm:zod";
 import { format } from "npm:date-fns";
 import { tz } from "npm:@date-fns/tz";
 
-const Article = zod.object({
-  title: zod.string(),
-  url: zod.string(),
-  date: zod.date(),
-});
-
-type Article = zod.infer<typeof Article>;
-
-function tee<T>(value: T): T {
-  console.log(value);
-  return value;
-}
-
-function sleep(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
-function map<T, U>(mayValue: T | undefined, process: (value: T) => U): U | undefined {
-  if (mayValue === undefined) {
-    return undefined;
-  }
-
-  return process(mayValue);
-}
-
-async function withRetry<T>(count: number, lambda: () => Promise<T>): Promise<T> {
-  let i = 0;
-
-  for (i = 0; i < count; i++) {
-    try {
-      return await lambda();
-    } catch (e) {
-      console.error(`Failed to execute lambda: ${e}`);
-      await sleep(1000);
-    }
-  }
-
-  throw new Error(`Failed to execute lambda after ${i} retries.`);
-}
-
-function isArticle(value: unknown): value is Article {
-  return Article.safeParse(value).success;
-}
-
-async function getTextByUrl(url: string) {
-  const result = await fetch(url);
-  return result.text();
-}
-
-async function getDocumentByUrl(url: string) {
-  const text = await getTextByUrl(url);
-  const dom = new JSDOM(text);
-  return dom.window.document;
-}
-
-function extractNikkeiNewsArticles(document: Document): Article[] {
-  const baseUrl = "https://www.nikkei.com";
-  const articlesElement = document.getElementsByTagName("article");
-
-  const articles = [...articlesElement]
-    .map((article) => ({
-      title: article.querySelector("h2")?.textContent,
-      url: `${baseUrl}${article.querySelector("a")?.href}`,
-      date: map(article.querySelector("time")?.dateTime, dateTime => new Date(dateTime)),
-    }))
-    .filter((article) => isArticle(article));
-
-  return articles;
-}
-
-async function getNikkeiNewsArticles(): Promise<Article[]> {
-  const url = "https://www.nikkei.com/news/category/";
-  const document = await getDocumentByUrl(url);
-
-  return extractNikkeiNewsArticles(document);
-}
+import { withRetry } from "./utils.ts";
+import { getNikkeiNewsArticles } from "./nikkei.ts";
+import { Article } from "./types.ts";
 
 function dateToSeconds(date: Date) {
   return date.getTime() / 1000;
