@@ -92,14 +92,14 @@ function currentDate() {
 
 async function getLastRunDate() {
   try {
-    await Deno.readTextFile("last_run");
+    return new Date(await Deno.readTextFile("last_run"));
   } catch(e) {
     if (e instanceof Deno.errors.NotFound) {
       return new Date(0);
     }
   }
 
-  return new Date();
+  throw new Error("Failed to read last_run file.");
 }
 
 async function setLastRunTime() {
@@ -157,8 +157,10 @@ async function main() {
   // FIXME: No retry
   const lastRunDate = await getLastRunDate();
 
-  if ((dateToSeconds(currentDate()) - dateToSeconds(lastRunDate)) < leastIntervalSeconds) {
-    console.log(`Skipping execution because the last run was less than ${leastIntervalSeconds} seconds ago.`);
+  const durationSinceLastRun = dateToSeconds(currentDate()) - dateToSeconds(lastRunDate);
+
+  if (durationSinceLastRun < leastIntervalSeconds) {
+    console.log(`Skipping execution because the last run was in ${durationSinceLastRun}, less than ${leastIntervalSeconds} seconds ago.`);
     return;
   }
 
@@ -169,7 +171,8 @@ async function main() {
   const latestArticles = articles.filter(article => article.date > lastRunDate);
 
   for (const article of latestArticles) {
-    await withRetry(2, () => postToMisskey(article, misskeyServer, misskeyToken, timeZone));
+    console.log("Write:", article);
+    // await withRetry(2, () => postToMisskey(article, misskeyServer, misskeyToken, timeZone));
   }
 }
 
