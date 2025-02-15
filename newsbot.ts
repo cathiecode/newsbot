@@ -51,7 +51,11 @@ async function postToMisskey(
   if (dryRun) {
     console.log("Skipping post to misskey due to dry run:", url, option);
   } else {
-    await fetch(url, option);
+    const result = await fetch(url, option);
+
+    if (!result.ok) {
+      throw new Error("Failed to post to misskey: " + result.statusText);
+    }
   }
 }
 
