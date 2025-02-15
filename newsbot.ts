@@ -170,8 +170,7 @@ async function main() {
   const latestArticles = articles.filter(article => article.date > lastRunDate);
 
   for (const article of latestArticles) {
-    console.log("Write:", article);
-    // await withRetry(2, () => postToMisskey(article, misskeyServer, misskeyToken, timeZone));
+    await withRetry(2, () => postToMisskey(article, misskeyServer, misskeyToken, timeZone));
   }
 }
 
