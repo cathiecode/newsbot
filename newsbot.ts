@@ -156,12 +156,13 @@ async function main() {
 
   // FIXME: No retry
   const lastRunDate = await getLastRunDate();
-  await setLastRunTime();
 
   if ((dateToSeconds(currentDate()) - dateToSeconds(lastRunDate)) < leastIntervalSeconds) {
     console.log(`Skipping execution because the last run was less than ${leastIntervalSeconds} seconds ago.`);
     return;
   }
+
+  await setLastRunTime();
 
   const articles = await withRetry(3, () => getNikkeiNewsArticles());
 
