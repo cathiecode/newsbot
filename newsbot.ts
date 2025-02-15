@@ -69,8 +69,7 @@ function extractNikkeiNewsArticles(document: Document): Article[] {
       url: `${baseUrl}${article.querySelector("a")?.href}`,
       date: map(article.querySelector("time")?.dateTime, dateTime => new Date(dateTime)),
     }))
-    .filter((article) => isArticle(article))
-    .map(tee);
+    .filter((article) => isArticle(article));
 
   return articles;
 }
