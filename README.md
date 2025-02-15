@@ -2,8 +2,10 @@
 
 ## Usage
 ### .env
+```
 MISSKEY_SERVER=https://misskey.example.com
 MISSKEY_TOKEN=tokenstring
+```
 
 ### Run in shell
 ```
