@@ -34,7 +34,7 @@ async function postToMisskey(
       "visibility": "home",
       "visibleUserIds": [],
       "cw": null,
-      "localOnly": true,
+      "localOnly": false,
       "reactionAcceptance": null,
       "noExtractMentions": false,
       "noExtractHashtags": false,
