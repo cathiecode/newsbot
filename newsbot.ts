@@ -1,6 +1,5 @@
 import { format } from "npm:date-fns";
 import { tz } from "npm:@date-fns/tz";
-import { parseArgs } from "jsr:@std/cli/parse-args";
 
 import { withRetry } from "./utils.ts";
 import { getNikkeiNewsArticles } from "./nikkei.ts";
